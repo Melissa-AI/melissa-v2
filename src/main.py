@@ -8,9 +8,9 @@ with open("profile.json") as f:
 
 name = profile["name"]
 
-tts("Hello "+name +", I am Melissa. How can I help you?")
+tts("Hello " + name + ", I am Melissa. How can I help you?")
 
 userInput = stt()
 print(userInput)
 
-tts("You said: "+userInput)
+tts("You said: " + userInput)
