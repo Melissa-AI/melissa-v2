@@ -7,8 +7,8 @@ def logic(message):
     """
     response = chat(model='llama3.2', messages=[
         {
-            'role':'system',
-            'content': 'You are a helpful virtual assistant named Melissa.'
+            'role': 'system',
+            'content': 'You are a helpful virtual assistant named Melissa. Give concise replies.',
         },
         {
             'role': 'user',
