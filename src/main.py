@@ -1,6 +1,5 @@
 from stt import stt
 from tts import tts
-# import the logic function from logic.py
 from logic import logic
 import json
 
@@ -10,25 +9,64 @@ with open("profile.json") as f:
 
 name = profile["name"]
 
-# Pass the name to the logic function
-llm_response = logic(f"Hello, my name is {name}")
+messages = [
+    {
+        'role': 'system',
+        'content':
+        '''
+        You are an AI assistant that MUST use the provided tools when NECESSARY.
 
-# Pass the response from the logic function to the tts function
-tts(llm_response)
+AVAILABLE TOOLS:
+1. get_date_time: Get the current date or time based on user query
+   - Use this tool whenever a user asks about the current time or date
+
+For non-tool questions, respond normally. For date/time questions, you MUST use the tool.
+
+EXAMPLES:
+User: "What time is it?"
+Assistant: The current time is 12:34
+
+User: "Tell me today's date"
+Assistant: Today's date is 17 Dec, 2025
+
+User: "Hello, my name is John"
+Assistant: Hello, how can I help you today?
+        '''
+    },
+]
+
+# Initial greeting
+messages.append({
+    'role': 'user',
+    'content': f"Hello, my name is {name}",
+})
+
+# Get and speak initial response
+llm_response = logic(messages)
+
+tts(llm_response.content)
 
 while True:
-	try:
-		# Get user input via voice
-		userInput = stt()
+    try:
+        userInput = stt()
+        if not userInput:
+            print("No input detected. Ending conversation...")
+            break
 
-		# Check if user input is empty or None
-		if not userInput:
-			print("No input detected. Ending conversation...")
-			break
+        # Add previous assistant response and new user input
+        messages.append({
+            'role': 'assistant',
+            'content': llm_response.content
+        })
+        messages.append({
+            'role': 'user',
+            'content': userInput,
+        })
 
-		# Process user input and respond
-		tts(logic(userInput))
+        # Get and speak new response
+        llm_response = logic(messages)
+        tts(llm_response.content)
 
-	except Exception as e:
-		print(f"An error occurred: {str(e)}")
-		break
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        break
