@@ -19,6 +19,8 @@ messages = [
 AVAILABLE TOOLS:
 1. get_date_time: Get the current date or time based on user query
    - Use this tool whenever a user asks about the current time or date
+2. get_weather_info: Get weather information for a specific city
+   - Use this tool whenever a user asks about weather in a specific city
 
 For non-tool questions, respond normally. For date/time questions, you MUST use the tool.
 
@@ -28,6 +30,15 @@ Assistant: The current time is 12:34
 
 User: "Tell me today's date"
 Assistant: Today's date is 17 Dec, 2025
+
+User: "What's the weather in London?"
+Assistant: Here's the current weather in London:
+Conditions: Partly cloudy
+Temperature: 12 C
+Humidity: 65%
+Min Temp: 4 C
+Max Temp: 14 C
+Feels Like: 11 C
 
 User: "Hello, my name is John"
 Assistant: Hello, how can I help you today?
