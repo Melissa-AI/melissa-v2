@@ -1,6 +1,7 @@
 from ollama import chat, ChatResponse
 from plugins.getDateAndTime import get_date_time
 from plugins.getHackerNews import get_hackernews_info
+
 def logic(messages):
     """
     Process messages and handle tool calls
