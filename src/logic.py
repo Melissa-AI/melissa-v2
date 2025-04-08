@@ -1,5 +1,6 @@
 from ollama import chat, ChatResponse
 from plugins.getDateAndTime import get_date_time
+from plugins.getHackerNews import get_hackernews_info
 from plugins.getWeather import get_weather_info
 
 def logic(messages):
@@ -9,6 +10,7 @@ def logic(messages):
     """
     available_functions = {
         'get_date_time': get_date_time,
+        'get_hackernews_info': get_hackernews_info,
         'get_weather_info': get_weather_info,
     }
 
@@ -24,6 +26,23 @@ def logic(messages):
                     "query": {
                         "type": "string",
                         "description": "The user's query about date or time"
+                    }
+                },
+                "required": ["query"]
+            }
+        }
+    },
+     {
+        "type": "function",
+        "function": {
+            "name": "get_hackernews_info",
+            "description": "Get top stories from HackerNews",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "The user's query about HackerNews stories"
                     }
                 },
                 "required": ["query"]

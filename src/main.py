@@ -19,7 +19,9 @@ messages = [
 AVAILABLE TOOLS:
 1. get_date_time: Get the current date or time based on user query
    - Use this tool whenever a user asks about the current time or date
-2. get_weather_info: Get weather information for a specific city
+2. get_hackernews_info: Get top stories from HackerNews
+   - Use this tool whenever a user asks about HackerNews stories
+3. get_weather_info: Get weather information for a specific city
    - Use this tool whenever a user asks about weather in a specific city
 
 For non-tool questions, respond normally. For date/time questions, you MUST use the tool.
@@ -39,6 +41,14 @@ Humidity: 65%
 Min Temp: 4 C
 Max Temp: 14 C
 Feels Like: 11 C
+
+User: "What are the top stories on HackerNews?"
+Assistant: Here are the top stories from HackerNews:
+1. [Story Title]
+   Author: [Author Name]
+2. [Story Title]
+   Author: [Author Name]
+...
 
 User: "Hello, my name is John"
 Assistant: Hello, how can I help you today?
