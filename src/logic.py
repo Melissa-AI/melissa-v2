@@ -2,6 +2,7 @@ from ollama import chat, ChatResponse
 from plugins.getDateAndTime import get_date_time
 from plugins.getHackerNews import get_hackernews_info
 from plugins.getWeather import get_weather_info
+from plugins.notesManager import manage_notes
 
 def logic(messages):
     """
@@ -12,6 +13,7 @@ def logic(messages):
         'get_date_time': get_date_time,
         'get_hackernews_info': get_hackernews_info,
         'get_weather_info': get_weather_info,
+        'manage_notes': manage_notes,
     }
 
     # Define tool schema more explicitly
@@ -60,6 +62,23 @@ def logic(messages):
                     "query": {
                         "type": "string",
                         "description": "The user's query about weather including city name"
+                    }
+                },
+                "required": ["query"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "manage_notes",
+            "description": "Save, retrieve, list, update, or delete notes",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "The user's query about notes management (save, get, list, update, delete)"
                     }
                 },
                 "required": ["query"]

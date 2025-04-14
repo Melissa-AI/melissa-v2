@@ -54,8 +54,11 @@ def get_hackernews_info(query: str) -> str:
     for i, story in enumerate(stories, 1):
         title = story.get('title', 'No title')
         author = story.get('by', 'unknown')
+        url = story.get('url', '')
 
         response += f"{i}. {title}\n"
         response += f"   Author: {author}\n"
+        if url:
+            response += f"   URL: {url}\n"
 
     return response
