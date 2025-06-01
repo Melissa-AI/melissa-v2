@@ -13,7 +13,7 @@ def stt():
 
 	# Start audio stream
 	mic = pyaudio.PyAudio()
-	stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=8000)
+	stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=4096)
 	stream.start_stream()
 
 	MAX_SILENCE_TIME = 2.0  # Maximum time to wait for speech
@@ -24,7 +24,7 @@ def stt():
 	print("Listening...")
 
 	while True:
-		data = stream.read(4000, exception_on_overflow=False)
+		data = stream.read(4096, exception_on_overflow=False)
 
 		if recognizer.AcceptWaveform(data):
 			result = json.loads(recognizer.Result())
