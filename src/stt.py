@@ -1,11 +1,12 @@
 import sys
 import os
-from vosk import Model, KaldiRecognizer
+from vosk import Model, KaldiRecognizer, SetLogLevel
 import pyaudio
 import json
 import time
 
 def stt():
+	SetLogLevel(-1) # Disable Vosk logging
 	# Load the Vosk model
 	model = Model("model")
 	recognizer = KaldiRecognizer(model, 16000)
