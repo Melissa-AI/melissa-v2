@@ -5,7 +5,7 @@ import json
 
 # Load the profile.json file
 with open("profile.json") as f:
-	profile = json.load(f)
+    profile = json.load(f)
 
 name = profile["name"]
 
