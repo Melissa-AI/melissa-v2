@@ -1,9 +1,10 @@
 import re
 from ollama import chat, ChatResponse
-from plugins.getDateAndTime import get_date_time
+from plugins.getDateAndTime import get_current_date, get_current_time
 from plugins.getHackerNews import get_hackernews_info
 from plugins.getWeather import get_weather_info
-from plugins.notesManager import manage_notes
+from plugins.notesManager import save_note, get_note, list_notes, update_note, delete_note, search_notes
+
 
 def logic(messages):
     """
@@ -11,31 +12,43 @@ def logic(messages):
     Returns appropriate response from the LLM.
     """
     available_functions = {
-        'get_date_time': get_date_time,
+        'get_current_date': get_current_date,
+        'get_current_time': get_current_time,
         'get_hackernews_info': get_hackernews_info,
         'get_weather_info': get_weather_info,
-        'manage_notes': manage_notes,
+        'save_note': save_note,
+        'get_note': get_note,
+        'list_notes': list_notes,
+        'update_note': update_note,
+        'delete_note': delete_note,
+        'search_notes': search_notes
     }
 
     # Define tool schema more explicitly
     tools = [{
         "type": "function",
         "function": {
-            "name": "get_date_time",
-            "description": "Get the current date or time based on user query",
+                "name": "get_current_date",
+            "description": "Get today's date",
             "parameters": {
-                "type": "object",
-                "properties": {
-                    "query": {
-                        "type": "string",
-                        "description": "The user's query about date or time"
-                    }
-                },
-                "required": ["query"]
+                        "type": "object",
+                        "properties": {},
+                        "required": []
             }
         }
+    }, {
+        "type": "function",
+        "function": {
+                "name": "get_current_time",
+            "description": "Always get the current time of the day",
+                "parameters": {
+                    "type": "object",
+                    "properties": {},
+                    "required": []
+                }
+        }
     },
-     {
+        {
         "type": "function",
         "function": {
             "name": "get_hackernews_info",
@@ -52,11 +65,11 @@ def logic(messages):
             }
         }
     },
-    {
+        {
         "type": "function",
         "function": {
             "name": "get_weather_info",
-            "description": "Get weather information for a specific city",
+            "description": "Always get weather information for a specific city",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -68,23 +81,109 @@ def logic(messages):
                 "required": ["query"]
             }
         }
-    },
-    {
+    }, {
         "type": "function",
-        "function": {
-            "name": "manage_notes",
-            "description": "Save, retrieve, list, update, or delete notes",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "query": {
-                        "type": "string",
-                        "description": "The user's query about notes management (save, get, list, update, delete)"
+                "function": {
+                    "name": "save_note",
+                    "description": "Save a note with a title and content",
+                    "parameters": {
+                            "type": "object",
+                            "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "description": "The title of the note"
+                                    },
+                                "content": {
+                                        "type": "string",
+                                        "description": "The content of the note"
+                                    }
+                            },
+                        "required": ["title", "content"]
                     }
-                },
-                "required": ["query"]
-            }
-        }
+                }
+    },
+        {
+        "type": "function",
+                "function": {
+                    "name": "get_note",
+                    "description": "Retrieve a note by its title",
+                    "parameters": {
+                            "type": "object",
+                            "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "description": "The title of the note to retrieve"
+                                    }
+                            },
+                        "required": ["title"]
+                    }
+                }
+    },
+        {
+        "type": "function",
+                "function": {
+                    "name": "search_notes",
+                    "description": "Search for notes containing a specific term",
+                    "parameters": {
+                            "type": "object",
+                            "properties": {
+                                    "query": {
+                                        "type": "string",
+                                        "description": "The search term to find in notes"
+                                    }
+                            },
+                        "required": ["query"]
+                    }
+                }
+    },
+        {
+        "type": "function",
+                "function": {
+                    "name": "list_notes",
+                    "description": "List all available notes",
+                    "parameters": {
+                            "type": "object",
+                            "properties": {},
+                        "required": []
+                    }
+                }
+
+    }, {
+        "type": "function",
+                "function": {
+                    "name": "update_note",
+                    "description": "Update an existing note with new content",
+                    "parameters": {
+                            "type": "object",
+                            "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "description": "The title of the note to update"
+                                    },
+                                "content": {
+                                        "type": "string",
+                                        "description": "The new content for the note"
+                                    }
+                            },
+                        "required": ["title", "content"]
+                    }
+                }
+    }, {
+        "type": "function",
+                "function": {
+                    "name": "delete_note",
+                    "description": "Delete a note by its title",
+                    "parameters": {
+                            "type": "object",
+                            "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "description": "The title of the note to delete"
+                                    }
+                            },
+                        "required": ["title"]
+                    }
+                }
     }]
 
     # Get initial response
@@ -92,7 +191,8 @@ def logic(messages):
 
     # Clean the response content
     if 'content' in response.message and response.message['content']:
-        response.message['content'] = re.sub(r'<think>.*?</think>', '', response.message['content'], flags=re.DOTALL).strip()
+        response.message['content'] = re.sub(
+            r'<think>.*?</think>', '', response.message['content'], flags=re.DOTALL).strip()
 
     # If no tool calls, return the response directly
     if not response.message.tool_calls:
@@ -108,18 +208,25 @@ def logic(messages):
                 tool_outputs.append({
                     'role': 'tool',
                     'content': output,
-                'name': tool.function.name
-            })
+                    'name': tool.function.name
+                })
 
     if tool_outputs:
+        # Add the assistant's tool call message
+        messages.append({
+            'role': 'assistant',
+            'content': response.message.content or '',
+            'tool_calls': response.message.tool_calls
+        })
+        # Add the tool outputs
         messages.extend(tool_outputs)
 
         final_response = chat('qwen3:1.7b', messages=messages, tools=tools)
 
         # Clean the final response content
         if 'content' in final_response.message and final_response.message['content']:
-            final_response.message['content'] = re.sub(r'<think>.*?</think>', '', final_response.message['content'], flags=re.DOTALL).strip()
-
+            final_response.message['content'] = re.sub(
+                r'<think>.*?</think>', '', final_response.message['content'], flags=re.DOTALL).strip()
         return final_response.message
 
     return response.message
