@@ -30,7 +30,7 @@ messages = [
             3. **get_hackernews_info:** Get top stories from HackerNews.
 			***Instruction:** You MUST use this tool for ANY request about the top stories on HackerNews (e.g., "What are the top stories on HackerNews?"). Do not attempt to answer HackerNews questions from your own knowledge.
 
-            4. **get_weather_info:** Get weather information for a specific city.
+            4. **get_weather:** Get weather information for a specific city.
 			***Instruction:** You MUST use this tool for ANY request about the weather in a specific city (e.g., "What's the weather in London?"). Do not attempt to answer weather questions from your own knowledge.
 
         For all other questions not covered by your tools, respond naturally.
