@@ -8,12 +8,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # You'll need to sign up at OpenWeatherMap and get an API key
-API_KEY = os.environ.get('WEATHER_API_KEY') # Get API key from environment variable
+# Get API key from environment variable
+API_KEY = os.environ.get('WEATHER_API_KEY')
 
 if not API_KEY:
     raise ValueError("API key for OpenWeatherMap not found")
 
 BASE_URL = "http://api.openweathermap.org/data/2.5/weather"
+
 
 def fetch_weather_data(city: str) -> Optional[Dict]:
     """Fetch weather data for given city from OpenWeatherMap API"""
@@ -28,6 +30,7 @@ def fetch_weather_data(city: str) -> Optional[Dict]:
             return json.loads(response.read())
     except (error.URLError, json.JSONDecodeError):
         return None
+
 
 def get_weather_info(query: str) -> str:
     """Process user query and return weather information"""
@@ -54,9 +57,9 @@ def get_weather_info(query: str) -> str:
     feels_like = weather_data['main']['feels_like']
 
     return f"Current weather in {city.title()}:\n" \
-           f"Temperature: {temp}°C\n" \
-           f"Conditions: {description.capitalize()}\n" \
-           f"Humidity: {humidity}%"\
-           f"Min Temp: {min_temp}°C\n" \
-           f"Max Temp: {max_temp}°C\n" \
-           f"Feels Like: {feels_like}°C"
+        f"Temperature: {temp}°C\n" \
+        f"Conditions: {description.capitalize()}\n" \
+        f"Humidity: {humidity}%"\
+        f"Min Temp: {min_temp}°C\n" \
+        f"Max Temp: {max_temp}°C\n" \
+        f"Feels Like: {feels_like}°C"

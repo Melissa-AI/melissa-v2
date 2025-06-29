@@ -4,6 +4,7 @@ from typing import List, Dict, Optional
 
 BASE_URL = "https://hacker-news.firebaseio.com/v0"
 
+
 def fetch_item(item_id: int) -> Optional[Dict]:
     """Fetch a single item from HackerNews API"""
     try:
@@ -12,6 +13,7 @@ def fetch_item(item_id: int) -> Optional[Dict]:
             return json.loads(response.read())
     except (error.URLError, json.JSONDecodeError):
         return None
+
 
 def fetch_top_stories(limit: int = 5) -> List[Dict]:
     """Fetch top stories from HackerNews"""
@@ -31,6 +33,7 @@ def fetch_top_stories(limit: int = 5) -> List[Dict]:
         return stories
     except (error.URLError, json.JSONDecodeError):
         return []
+
 
 def get_hackernews_info(query: str) -> str:
     """Process user query and return HackerNews information"""
