@@ -1,6 +1,7 @@
 import re
 from ollama import chat, ChatResponse
 
+
 def logic(message):
     """
     This function takes a user message as an argument and passes it to the LLM.
@@ -17,8 +18,9 @@ def logic(message):
         },
     ])
 
-	# Clean the response content
+    # Clean the response content
     if 'content' in response.message and response.message['content']:
-        response.message['content'] = re.sub(r'<think>.*?</think>', '', response.message['content'], flags=re.DOTALL).strip()
+        response.message['content'] = re.sub(
+            r'<think>.*?</think>', '', response.message['content'], flags=re.DOTALL).strip()
 
     return response.message.content
