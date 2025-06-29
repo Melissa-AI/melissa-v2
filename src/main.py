@@ -60,14 +60,21 @@ messages = [
             User: "Tell me today's date"
             Assistant: Today's date is 17 Dec, 2025
 
+            User: "What are the top stories on HackerNews?"
+            Assistant: Here are the top stories from HackerNews:
+                1. [Story Title]
+                Author: [Author Name]
+                2. [Story Title]
+                Author: [Author Name]
+
             User: "What's the weather in London?"
             Assistant: Here's the current weather in London:
-            Conditions: Partly cloudy
-            Temperature: 12 C
-            Humidity: 65%
-            Min Temp: 4 C
-            Max Temp: 14 C
-            Feels Like: 11 C
+                Conditions: Partly cloudy
+                Temperature: 12 C
+                Humidity: 65%
+                Min Temp: 4 C
+                Max Temp: 14 C
+                Feels Like: 11 C
 
             User: "Save note Meeting Tomorrow: I have a meeting with John at 2pm to discuss the project"
             Assistant: Note 'Meeting Tomorrow' saved successfully.
