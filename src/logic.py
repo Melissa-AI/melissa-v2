@@ -2,7 +2,7 @@ import re
 from ollama import chat, ChatResponse
 from plugins.getDateAndTime import get_current_date, get_current_time
 from plugins.getHackerNews import get_hackernews_info
-from plugins.getWeather import get_weather_info
+from plugins.getWeather import get_weather
 from plugins.notesManager import save_note, get_note, list_notes, update_note, delete_note, search_notes
 
 
@@ -15,7 +15,7 @@ def logic(messages):
         'get_current_date': get_current_date,
         'get_current_time': get_current_time,
         'get_hackernews_info': get_hackernews_info,
-        'get_weather_info': get_weather_info,
+        'get_weather': get_weather,
         'save_note': save_note,
         'get_note': get_note,
         'list_notes': list_notes,
@@ -68,17 +68,17 @@ def logic(messages):
         {
         "type": "function",
         "function": {
-            "name": "get_weather_info",
+            "name": "get_weather",
             "description": "Always get weather information for a specific city",
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "query": {
+                    "city": {
                         "type": "string",
-                        "description": "The user's query about weather including city name"
+                        "description": "The name of the city to get weather information for"
                     }
                 },
-                "required": ["query"]
+                "required": ["city"]
             }
         }
     }, {
@@ -96,7 +96,7 @@ def logic(messages):
                                 "content": {
                                         "type": "string",
                                         "description": "The content of the note"
-                                    }
+                                }
                             },
                         "required": ["title", "content"]
                     }
@@ -163,7 +163,7 @@ def logic(messages):
                                 "content": {
                                         "type": "string",
                                         "description": "The new content for the note"
-                                    }
+                                }
                             },
                         "required": ["title", "content"]
                     }

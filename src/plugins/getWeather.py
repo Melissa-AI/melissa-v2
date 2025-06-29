@@ -17,7 +17,7 @@ if not API_KEY:
 BASE_URL = "http://api.openweathermap.org/data/2.5/weather"
 
 
-def fetch_weather_data(city: str) -> Optional[Dict]:
+def get_weather(city: str) -> str:
     """Fetch weather data for given city from OpenWeatherMap API"""
     try:
         params = {
@@ -27,39 +27,24 @@ def fetch_weather_data(city: str) -> Optional[Dict]:
         }
         url = f"{BASE_URL}?{parse.urlencode(params)}"
         with request.urlopen(url) as response:
-            return json.loads(response.read())
+            weather_data = json.loads(response.read())
+            if not weather_data:
+                return f"Sorry, I couldn't fetch weather information for {city}"
+
+            temp = weather_data['main']['temp']
+            description = weather_data['weather'][0]['description']
+            humidity = weather_data['main']['humidity']
+            min_temp = weather_data['main']['temp_min']
+            max_temp = weather_data['main']['temp_max']
+            feels_like = weather_data['main']['feels_like']
+
+            return f"Current weather in {city.title()}:\n" \
+                f"Temperature: {temp}°C\n" \
+                f"Conditions: {description.capitalize()}\n" \
+                f"Humidity: {humidity}%"\
+                f"Min Temp: {min_temp}°C\n" \
+                f"Max Temp: {max_temp}°C\n" \
+                f"Feels Like: {feels_like}°C"
+
     except (error.URLError, json.JSONDecodeError):
         return None
-
-
-def get_weather_info(query: str) -> str:
-    """Process user query and return weather information"""
-    # Extract city name from query
-    words = query.lower().split()
-    try:
-        city_index = words.index('in') + 1
-        city = ' '.join(words[city_index:])
-    except ValueError:
-        return "Please specify a city using 'in'. For example: 'weather in London'"
-
-    if not city:
-        return "Please specify a city name"
-
-    weather_data = fetch_weather_data(city)
-    if not weather_data:
-        return f"Sorry, I couldn't fetch weather information for {city}"
-
-    temp = weather_data['main']['temp']
-    description = weather_data['weather'][0]['description']
-    humidity = weather_data['main']['humidity']
-    min_temp = weather_data['main']['temp_min']
-    max_temp = weather_data['main']['temp_max']
-    feels_like = weather_data['main']['feels_like']
-
-    return f"Current weather in {city.title()}:\n" \
-        f"Temperature: {temp}°C\n" \
-        f"Conditions: {description.capitalize()}\n" \
-        f"Humidity: {humidity}%"\
-        f"Min Temp: {min_temp}°C\n" \
-        f"Max Temp: {max_temp}°C\n" \
-        f"Feels Like: {feels_like}°C"
